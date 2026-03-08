@@ -4,12 +4,17 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
-  },
+  "dev": "turbo run dev",
+  "build": "turbo run build",
+  "lint": "turbo run lint",
+  "test": "turbo run test",
+  "typecheck": "turbo run typecheck",
+  "dev:web": "pnpm --filter @meta-geniusz/web dev",
+  "dev:hhu": "pnpm --filter @meta-geniusz/hhu dev",
+  "dev:rfg": "pnpm --filter @meta-geniusz/rfg dev",
+  "dev:admin": "pnpm --filter @meta-geniusz/admin dev",
+  "dev:ai": "pnpm --filter @meta-geniusz/ai-studio dev"
+},
   "devDependencies": {
     "turbo": "^2.5.0"
   }
