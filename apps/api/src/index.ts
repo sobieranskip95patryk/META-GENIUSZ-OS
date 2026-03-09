@@ -57,6 +57,32 @@ app.get("/users", async (_req, res) => {
   }
 });
 
+app.get("/users/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: {
+        posts: {
+          orderBy: { createdAt: "desc" },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    return res.json(user);
+  } catch (error: any) {
+    return res.status(500).json({
+      error: "failed to fetch user profile",
+      details: error.message,
+    });
+  }
+});
+
 /* DEMO USER */
 
 app.post("/demo-user", async (_req, res) => {
@@ -134,6 +160,58 @@ app.get("/posts", async (_req, res) => {
   }
 });
 
+app.get("/users/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: {
+        posts: {
+          orderBy: { createdAt: "desc" },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    return res.json(user);
+  } catch (error: any) {
+    return res.status(500).json({
+      error: "failed to fetch user profile",
+      details: error.message,
+    });
+  }
+});
+
 app.listen(4000, () => {
   console.log("META-GENIUSZ API running on http://localhost:4000");
+});
+
+app.get("/seed-demo-user", async (_req, res) => {
+  try {
+    const existing = await prisma.user.findUnique({
+      where: { username: "demo_hhu" },
+    });
+
+    if (existing) {
+      return res.json(existing);
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        username: "demo_hhu",
+        bio: "Hip Hop Universe demo creator",
+      },
+    });
+
+    return res.json(user);
+  } catch (error: any) {
+    return res.status(500).json({
+      error: "failed to seed demo user",
+      details: error.message,
+    });
+  }
 });
