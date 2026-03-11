@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turbo.build/json-schema.json",
   "tasks": {
     "dev": {
       "cache": false,
@@ -10,7 +10,10 @@
       "outputs": [".next/**", "dist/**", "build/**"]
     },
     "lint": {},
-    "test": {},
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
     "typecheck": {}
   }
 }

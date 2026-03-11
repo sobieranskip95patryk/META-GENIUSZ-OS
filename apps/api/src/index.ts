@@ -1,9 +1,29 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
+import rateLimit from "express-rate-limit";
+import { Request, Response, NextFunction } from 'express';
 
 const prisma = new PrismaClient();
 const app = express();
+
+const PORT = process.env.PORT || 3000;
+
+const authenticate: (req: Request & { user?: any }, res: Response, next: NextFunction) => void = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET as string);
+    req.user = user;
+    next();
+  } catch (err) {
+    res.status(403).json({ error: "Forbidden" });
+  }
+};
 
 async function getOrCreateDemoUser() {
   const existing = await prisma.user.findUnique({
@@ -22,8 +42,14 @@ async function getOrCreateDemoUser() {
   });
 }
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+});
+
 app.use(cors());
 app.use(express.json());
+app.use(limiter);
 
 app.get("/", (_req, res) => {
   res.json({ system: "META-GENIUSZ OS API", status: "running" });
@@ -177,6 +203,6 @@ app.get("/seed-demo-user", async (_req, res) => {
   }
 });
 
-app.listen(4000, () => {
-  console.log("META-GENIUSZ API running on http://localhost:4000");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

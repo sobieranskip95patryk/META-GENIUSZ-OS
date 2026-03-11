@@ -4,18 +4,27 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-  "dev": "turbo run dev",
-  "build": "turbo run build",
-  "lint": "turbo run lint",
-  "test": "turbo run test",
-  "typecheck": "turbo run typecheck",
-  "dev:web": "pnpm --filter @meta-geniusz/web dev",
-  "dev:hhu": "pnpm --filter @meta-geniusz/hhu dev",
-  "dev:rfg": "pnpm --filter @meta-geniusz/rfg dev",
-  "dev:admin": "pnpm --filter @meta-geniusz/admin dev",
-  "dev:ai": "pnpm --filter @meta-geniusz/ai-studio dev"
-},
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "dev:web": "pnpm --filter @meta-geniusz/web dev",
+    "dev:hhu": "pnpm --filter @meta-geniusz/hhu dev",
+    "dev:rfg": "pnpm --filter @meta-geniusz/rfg dev",
+    "dev:admin": "pnpm --filter @meta-geniusz/admin dev",
+    "dev:ai": "pnpm --filter @meta-geniusz/ai-studio dev"
+  },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "turbo": "^2.5.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.5.0",
+    "@types/express-rate-limit": "^5.1.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "cors": "^2.8.6",
+    "express-rate-limit": "^8.3.1",
+    "jsonwebtoken": "^9.0.3"
   }
 }

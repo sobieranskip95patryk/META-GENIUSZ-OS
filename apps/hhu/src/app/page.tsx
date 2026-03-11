@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 type Post = {
   id: string;
@@ -20,9 +20,10 @@ export default function HHUFeed() {
   const [text, setText] = useState("");
   const [demoUser, setDemoUser] = useState<User | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  async function ensureDemoUser() {
-    const res = await fetch("http://localhost:4000/demo-user", {
+  const ensureDemoUser = useCallback(async () => {
+    const res = await fetch(`${API_URL}/demo-user`, {
       method: "POST",
     });
 
@@ -33,10 +34,10 @@ export default function HHUFeed() {
     const data = await res.json();
     setDemoUser(data);
     return data as User;
-  }
+  }, [API_URL]);
 
-  async function loadPosts() {
-    const res = await fetch("http://localhost:4000/posts");
+  const loadPosts = useCallback(async () => {
+    const res = await fetch(`${API_URL}/posts`);
 
     if (!res.ok) {
       throw new Error("failed to load posts");
@@ -44,7 +45,7 @@ export default function HHUFeed() {
 
     const data = await res.json();
     setPosts(data);
-  }
+  }, [API_URL]);
 
   async function createPost() {
     if (!text.trim()) {
@@ -55,7 +56,7 @@ export default function HHUFeed() {
       setStatus("Publishing post...");
       const currentUser = demoUser ?? (await ensureDemoUser());
 
-      const res = await fetch("http://localhost:4000/posts", {
+      const res = await fetch(`${API_URL}/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +92,7 @@ export default function HHUFeed() {
     }
 
     bootstrap();
-  }, []);
+  }, [ensureDemoUser, loadPosts]);
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
