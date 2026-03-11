@@ -5,6 +5,23 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const app = express();
 
+async function getOrCreateDemoUser() {
+  const existing = await prisma.user.findUnique({
+    where: { username: "demo_hhu" },
+  });
+
+  if (existing) {
+    return existing;
+  }
+
+  return prisma.user.create({
+    data: {
+      username: "demo_hhu",
+      bio: "Demo Hip Hop Universe creator",
+    },
+  });
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -87,20 +104,7 @@ app.get("/users/:username", async (req, res) => {
 
 app.post("/demo-user", async (_req, res) => {
   try {
-    const existing = await prisma.user.findUnique({
-      where: { username: "demo_hhu" },
-    });
-
-    if (existing) {
-      return res.json(existing);
-    }
-
-    const user = await prisma.user.create({
-      data: {
-        username: "demo_hhu",
-        bio: "Demo Hip Hop Universe creator",
-      },
-    });
+    const user = await getOrCreateDemoUser();
 
     return res.json(user);
   } catch (error: any) {
@@ -160,26 +164,9 @@ app.get("/posts", async (_req, res) => {
   }
 });
 
-app.listen(4000, () => {
-  console.log("META-GENIUSZ API running on http://localhost:4000");
-});
-
 app.get("/seed-demo-user", async (_req, res) => {
   try {
-    const existing = await prisma.user.findUnique({
-      where: { username: "demo_hhu" },
-    });
-
-    if (existing) {
-      return res.json(existing);
-    }
-
-    const user = await prisma.user.create({
-      data: {
-        username: "demo_hhu",
-        bio: "Hip Hop Universe demo creator",
-      },
-    });
+    const user = await getOrCreateDemoUser();
 
     return res.json(user);
   } catch (error: any) {
@@ -188,4 +175,8 @@ app.get("/seed-demo-user", async (_req, res) => {
       details: error.message,
     });
   }
+});
+
+app.listen(4000, () => {
+  console.log("META-GENIUSZ API running on http://localhost:4000");
 });

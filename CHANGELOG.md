@@ -7,6 +7,23 @@ Wersjonowanie zgodne z [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.1] — 2026-03-11
+
+### Dodano
+- uzupełniono dokumenty misji, architektury, MVP i roadmapy
+- dodano pełny raport analizy repozytorium
+- dodano raport braków wraz z rozliczeniem pustych plików
+- uzupełniono README dla API oraz pustych pakietów workspace
+
+### Zmieniono
+- zastąpiono boilerplate w modułach AI Studio i Rocket Fuell Girls treścią zgodną z domeną produktu
+
+### Naprawiono
+- usunięto niespójności w API Express, w tym duplikację trasy profilu użytkownika
+- poprawiono przepływ tworzenia demo usera w module HHU
+
+---
+
 ## [0.1.0] — 2026-03-09
 
 ### Dodano

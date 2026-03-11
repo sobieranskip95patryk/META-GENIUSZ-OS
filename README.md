@@ -146,6 +146,8 @@ pnpm test         # Testy (konfiguracja do uzupełnienia)
 - [`REPORT.md`](./REPORT.md) — Kompletny raport repozytorium (100%)
 - [`docs/vision/mission.md`](./docs/vision/mission.md) — Misja i wizja
 - [`docs/architecture/system-overview.md`](./docs/architecture/system-overview.md) — Architektura systemu
+- [`docs/architecture/repository-analysis.md`](./docs/architecture/repository-analysis.md) — Uzupełniona analiza repozytorium
+- [`docs/architecture/gap-report.md`](./docs/architecture/gap-report.md) — Raport braków i pustych plików
 - [`docs/product/mvp.md`](./docs/product/mvp.md) — Specyfikacja MVP
 - [`docs/roadmap/roadmap.md`](./docs/roadmap/roadmap.md) — Roadmap produktu
 - [`CHANGELOG.md`](./CHANGELOG.md) — Historia zmian
