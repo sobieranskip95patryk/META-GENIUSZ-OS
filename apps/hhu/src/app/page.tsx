@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
 type Post = {
   id: string;
   content: string;
@@ -12,7 +14,7 @@ export default function HHUFeed() {
   const [text, setText] = useState("");
 
   async function loadPosts() {
-    const res = await fetch("http://localhost:4000/posts");
+    const res = await fetch(`${API_URL}/posts`);
     const data = await res.json();
     setPosts(data);
   }
@@ -20,7 +22,7 @@ export default function HHUFeed() {
   async function createPost() {
     if (!text.trim()) return;
 
-    await fetch("http://localhost:4000/posts", {
+    await fetch(`${API_URL}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

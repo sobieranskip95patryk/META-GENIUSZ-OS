@@ -43,11 +43,14 @@ Wersjonowanie zgodne z [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] — 2026-03-11
+
+### Zmieniono
+- `apps/hhu` — zastąpiono hardkodowany `http://localhost:4000` zmienną środowiskową `NEXT_PUBLIC_API_URL` (z fallbackiem na `http://localhost:4000`) w feed (`page.tsx`) i profilu użytkownika (`profile/[username]/page.tsx`)
+- `apps/api` — serwer nasłuchuje teraz na porcie ze zmiennej środowiskowej `PORT` (z fallbackiem na `4000`)
+
 ## [Unreleased]
 
-### Planowane (v0.2.0)
-- Naprawa zduplikowanego `GET /users/:username` route w API
-- Zmienne środowiskowe dla URL API
+### Planowane (v0.3.0)
 - System uwierzytelniania (NextAuth.js lub JWT)
-- GitHub Actions CI pipeline
 - Testy jednostkowe dla API (Vitest)
