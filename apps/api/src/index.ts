@@ -160,8 +160,10 @@ app.get("/posts", async (_req, res) => {
   }
 });
 
-app.listen(4000, () => {
-  console.log("META-GENIUSZ API running on http://localhost:4000");
+const PORT = parseInt(process.env.PORT ?? "4000", 10);
+
+app.listen(PORT, () => {
+  console.log(`META-GENIUSZ API running on http://localhost:${PORT}`);
 });
 
 app.get("/seed-demo-user", async (_req, res) => {

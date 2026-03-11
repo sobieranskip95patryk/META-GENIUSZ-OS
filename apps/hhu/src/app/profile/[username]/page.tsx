@@ -11,8 +11,10 @@ type UserProfile = {
   posts: Post[];
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
 async function getProfile(username: string): Promise<UserProfile | null> {
-  const res = await fetch(`http://localhost:4000/users/${username}`, {
+  const res = await fetch(`${API_URL}/users/${username}`, {
     cache: "no-store",
   });
 
