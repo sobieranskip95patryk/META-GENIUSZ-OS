@@ -160,32 +160,6 @@ app.get("/posts", async (_req, res) => {
   }
 });
 
-app.get("/users/:username", async (req, res) => {
-  try {
-    const { username } = req.params;
-
-    const user = await prisma.user.findUnique({
-      where: { username },
-      include: {
-        posts: {
-          orderBy: { createdAt: "desc" },
-        },
-      },
-    });
-
-    if (!user) {
-      return res.status(404).json({ error: "user not found" });
-    }
-
-    return res.json(user);
-  } catch (error: any) {
-    return res.status(500).json({
-      error: "failed to fetch user profile",
-      details: error.message,
-    });
-  }
-});
-
 app.listen(4000, () => {
   console.log("META-GENIUSZ API running on http://localhost:4000");
 });

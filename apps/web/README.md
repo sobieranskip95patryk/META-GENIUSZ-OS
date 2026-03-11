@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# @meta-geniusz/web — Centralny Hub Platformy
 
-## Getting Started
+Główny punkt wejścia do ekosystemu **META-GENIUSZ OS**. Dashboard nawigacyjny łączący wszystkie moduły.
 
-First, run the development server:
+**Framework**: Next.js 16 (App Router) | **Port**: 3000 | **Pakiet**: `@meta-geniusz/web`
+
+---
+
+## Opis
+
+`apps/web` to centralny hub — strona główna META-GENIUSZ OS prezentująca wszystkie moduły platformy. Zbudowany z myślą o estetyce dark-mode z gradientami (pink/fuchsia/cyan) i glassmorphic UI.
+
+## Trasy (Routes)
+
+| Trasa | Opis |
+|-------|------|
+| `/` | Strona główna — dashboard 4 modułów + infrastruktura |
+| `/hhu` | Hip Hop Universe (placeholder) |
+| `/rfg` | Rocket Fuell Girls (placeholder) |
+| `/ai-studio` | AI Studio (placeholder) |
+| `/admin` | Admin Control (placeholder) |
+
+## Funkcje strony głównej
+
+- 4 karty modułów (HHU, RFG, AI Studio, Admin) z hover-efektami
+- Sekcja infrastruktury: LOGOS/AI Brain, Creator Economy, Monorepo/Scale
+- CTA buttons: "Explore Modules" + link do GitHub
+- Responsywna siatka (grid 1→2→4 kolumny)
+- Dark theme z radial-gradient + backdrop-blur
+
+## Uruchomienie
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Z root monorepo
+pnpm dev:web
+
+# Z katalogu apps/web
+pnpm dev    # → http://localhost:3000
+pnpm build
+pnpm start
+pnpm lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Struktura plików
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/app/
+├── page.tsx           ← Hub główny (moduły + infrastruktura)
+├── layout.tsx         ← Root layout
+├── globals.css        ← Style globalne (Tailwind)
+├── favicon.ico
+├── hhu/page.tsx       ← Placeholder HHU
+├── rfg/page.tsx       ← Placeholder RFG
+├── ai-studio/page.tsx ← Placeholder AI Studio
+└── admin/page.tsx     ← Placeholder Admin
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js** 16.1.6 (App Router, Server Components)
+- **React** 19.2.3
+- **Tailwind CSS** 4.x
+- **TypeScript** 5.x (strict)
+- **ESLint** 9 + eslint-config-next
