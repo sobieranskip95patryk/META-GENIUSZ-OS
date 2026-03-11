@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# @meta-geniusz/ai-studio — AI Studio
 
-## Getting Started
+Narzędzia AI dla twórców — generowanie bio, captions, koncepcji i strategii wzrostu.
 
-First, run the development server:
+**Framework**: Next.js 16 (App Router) | **Pakiet**: `@meta-geniusz/ai-studio` | **Status**: 🔧 Scaffold
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Opis
+
+`apps/ai-studio` to moduł AI META-GENIUSZ OS — centrum narzędzi opartych na sztucznej inteligencji dla twórców. Docelowo integruje się z warstwą `@meta-geniusz/ai-core` (LOGOS) i zewnętrznymi API (OpenAI, Anthropic).
+
+## Planowane narzędzia AI
+
+| Narzędzie | Opis | Status |
+|-----------|------|--------|
+| Bio Generator | Generowanie profesjonalnego bio na podstawie danych twórcy | ⏳ Planned |
+| Caption Wizard | AI captions do postów, Reels, kampanii | ⏳ Planned |
+| Growth Strategy | Spersonalizowana strategia wzrostu zasięgów | ⏳ Planned |
+| Content Concepts | Generowanie koncepcji kreatywnych | ⏳ Planned |
+| Trend Analysis | Analiza trendów w niszy twórcy | ⏳ Planned |
+
+## Aktualna implementacja
+
+```
+src/app/
+├── page.tsx    ← Placeholder (tytuł + opis modułu)
+└── layout.tsx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Uruchomienie
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev:ai    # → http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack
 
-## Learn More
+- **Next.js** 16.1.6
+- **React** 19.2.3
+- **Tailwind CSS** 4.x
+- **TypeScript** 5.x (strict)
+- **@meta-geniusz/ai-core** (planowany — AI orchestration)
 
-To learn more about Next.js, take a look at the following resources:
+## Konfiguracja (planowana)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+AI_MODEL=gpt-4o-mini
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Roadmap
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Implementacja w fazie **v0.4.0** — szczegóły w [`docs/roadmap/roadmap.md`](../../docs/roadmap/roadmap.md).

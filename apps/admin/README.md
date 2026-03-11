@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# admin — Admin Control Panel
 
-## Getting Started
+Operacyjny panel zarządzania użytkownikami, moderacją, analityką i KPI META-GENIUSZ OS.
 
-First, run the development server:
+**Framework**: Next.js 16 (App Router) | **Status**: 🔧 Scaffold
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Opis
+
+`apps/admin` to moduł operacyjny META-GENIUSZ OS — centrum zarządzania całą platformą. Przeznaczony dla administratorów i ops team do monitorowania, moderacji i zarządzania systemem.
+
+## Planowane funkcje
+
+### Zarządzanie użytkownikami
+- [ ] Lista użytkowników z filtrowaniem i wyszukiwaniem
+- [ ] Podgląd i edycja profili
+- [ ] Blokowanie / zawieszanie kont
+- [ ] Role i uprawnienia
+
+### Moderacja treści
+- [ ] Kolejka treści do moderacji
+- [ ] Flagowanie postów i komentarzy
+- [ ] Historia decyzji moderacyjnych
+- [ ] Raporty od użytkowników
+
+### Analityka i KPI
+- [ ] Dashboard z kluczowymi metrykami
+- [ ] Aktywni użytkownicy (DAU/MAU)
+- [ ] Wzrost rejestracji
+- [ ] Engagement rate per moduł
+- [ ] Przychody (po wdrożeniu monetyzacji)
+
+### Operacje systemowe
+- [ ] Logi systemowe
+- [ ] Status serwisów
+- [ ] Zarządzanie feature flags
+- [ ] Backup i eksport danych
+
+## Aktualna implementacja
+
+```
+src/app/
+├── page.tsx    ← Placeholder (tytuł + opis modułu)
+└── layout.tsx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Uruchomienie
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev:admin    # → http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack
 
-## Learn More
+- **Next.js** 16.1.6
+- **React** 19.2.3
+- **Tailwind CSS** 4.x
+- **TypeScript** 5.x (strict)
 
-To learn more about Next.js, take a look at the following resources:
+> ⚠️ Panel administracyjny wymaga uwierzytelniania i autoryzacji (planowane w v0.2.0).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Implementacja w fazie **v1.0.0** — szczegóły w [`docs/roadmap/roadmap.md`](../../docs/roadmap/roadmap.md).
