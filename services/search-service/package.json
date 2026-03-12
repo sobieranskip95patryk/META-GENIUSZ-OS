@@ -1,0 +1,22 @@
+{
+  "name": "@meta-geniusz/search-service",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "@meta-geniusz/database": "*",
+    "@meta-geniusz/types": "*"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^20",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5"
+  }
+}

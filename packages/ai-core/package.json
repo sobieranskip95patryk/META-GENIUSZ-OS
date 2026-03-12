@@ -1,0 +1,17 @@
+{
+  "name": "@meta-geniusz/ai-core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.20.0",
+    "@meta-geniusz/database": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

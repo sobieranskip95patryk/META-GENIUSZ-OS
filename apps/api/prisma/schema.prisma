@@ -7,54 +7,328 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ============================================================
+// BETTER AUTH REQUIRED TABLES
+// ============================================================
+
 model User {
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  emailVerified    Boolean   @default(false)
+  image            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Extended fields (META-GENIUSZ OS, doc 18-19)
+  username         String?   @unique
+  bio              String?
+  role             String    @default("USER") // USER | MODERATOR | ADMIN | SUPER_ADMIN
+  phoneVerified    Boolean   @default(false)
+  identityVerified Boolean   @default(false)
+  deletedAt        DateTime?
+  status           String    @default("ACTIVE") // ACTIVE | SUSPENDED | BANNED | SOFT_DELETED
+
+  // Relations
+  accounts         Account[]
+  sessions         Session[]
+  verifications    Verification[]
+  posts            Post[]
+  comments         Comment[]
+  likes            Like[]
+  followers        Follow[]           @relation("Following")
+  following        Follow[]           @relation("Follower")
+  reports          Report[]           @relation("Reporter")
+  auditLogs        AuditLog[]         @relation("Actor")
+  aiGenerations    AIGeneration[]
+  creditBalance    CreditBalance?
+  transactions     Transaction[]      @relation("FromUser")
+  receivedTips     Transaction[]      @relation("ToUser")
+  notifications    Notification[]
+  moderationActions ModerationAction[] @relation("Moderator")
+  portfolios       Portfolio[]
+
+  @@map("user")
+}
+
+model Session {
   id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
+  expiresAt DateTime
+  token     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  username  String?  @unique
-  profile   Profile?
-  posts     Post[]
-  followers Follow[] @relation("follower")
-  following Follow[] @relation("following")
-  role      String   @default("user")
-}String @id @default(cuid())
-  bio    String?
-  avatar String?
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade
-  bio    String?
-  userId Int    @unique
-  user   User   @relation(fields: cuid())
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("verification")
+}
+
+// ============================================================
+// DOMAIN MODELS (doc 19: Master Domain Model)
+// ============================================================
+
+model Post {
+  id            String    @id @default(cuid())
+  content       String
+  imageUrl      String?
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  vertical      String    @default("HHU") // HHU | RFG | AI_STUDIO
+  type          String    @default("TEXT") // TEXT | IMAGE | AUDIO | VIDEO | LINK
+  status        String    @default("ACTIVE") // ACTIVE | HIDDEN | DELETED
+  likesCount    Int       @default(0)
+  commentsCount Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  comments      Comment[]
+  likes         Like[]
+  reports       Report[]  @relation("PostReport")
+}
+
+model Comment {
+  id        String    @id @default(cuid())
   content   String
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  likes     Int      @default(0)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment?  @relation("Replies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("Replies")
+  status    String    @default("ACTIVE")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  reports   Report[]  @relation("CommentReport")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
 }
 
 model Follow {
-  id          String @id @default(cuid())
+  id          String   @id @default(cuid())
   followerId  String
-  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
   followingId String
-  following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
 
   @@unique([followerId, followingId])
 }
 
-model Session {
+// ============================================================
+// MODERATION & SAFETY (doc 23, 25, 27)
+// ============================================================
+
+model Report {
+  id          String    @id @default(cuid())
+  reporterId  String
+  reporter    User      @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType  String    // POST | COMMENT | USER
+  targetId    String
+  reason      String    // SPAM | HATE | NSFW | ILLEGAL | HARASSMENT | IMPERSONATION | OTHER
+  description String?
+  status      String    @default("PENDING") // PENDING | REVIEWED | RESOLVED | DISMISSED
+  priority    String    @default("P2")      // P0 | P1 | P2
+  reviewedBy  String?
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+
+  targetPost    Post?    @relation("PostReport", fields: [targetId], references: [id])
+  targetComment Comment? @relation("CommentReport", fields: [targetId], references: [id])
+  actions       ModerationAction[]
+}
+
+model ModerationAction {
+  id          String   @id @default(cuid())
+  reportId    String?
+  report      Report?  @relation(fields: [reportId], references: [id])
+  moderatorId String
+  moderator   User     @relation("Moderator", fields: [moderatorId], references: [id])
+  action      String   // APPROVE | HIDE | DELETE | BAN_7D | BAN_30D | BAN_PERMANENT | WARN | ESCALATE
+  reason      String
+  legalBasis  String?
+  targetType  String
+  targetId    String
+  createdAt   DateTime @default(now())
+
+  appeals     Appeal[]
+}
+
+model Appeal {
+  id               String           @id @default(cuid())
+  actionId         String
+  action           ModerationAction @relation(fields: [actionId], references: [id])
+  appealerId       String
+  reason           String
+  status           String           @default("PENDING") // PENDING | UPHELD | REVERSED | MODIFIED
+  reviewerId       String?
+  reviewerDecision String?
+  createdAt        DateTime         @default(now())
+  resolvedAt       DateTime?
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  timestamp  DateTime @default(now())
+  actorId    String?
+  actor      User?    @relation("Actor", fields: [actorId], references: [id])
+  actorRole  String   @default("SYSTEM")
+  action     String
+  targetType String?
+  targetId   String?
+  metadata   Json?
+  ip         String?
+  userAgent  String?
+  result     String   @default("SUCCESS")
+  createdAt  DateTime @default(now())
+}
+
+// ============================================================
+// AI (doc 41-44)
+// ============================================================
+
+model AIGeneration {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // bio | caption | hashtags | promo | ideas | cover | workflow
+  input       Json
+  output      String   @db.Text
+  model       String   @default("gemini-1.5-flash")
+  creditsUsed Int      @default(1)
+  saved       Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model CreditBalance {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance       Int      @default(10)
+  lifetimeEarned Int     @default(10)
+  lastRefreshed DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ============================================================
+// MONETIZATION (doc 39, 48)
+// ============================================================
+
+model Subscription {
+  id           String    @id @default(cuid())
+  subscriberId String
+  plan         String    // FREE | HHU_PRO | AI_STARTER | AI_PRO | AI_UNLIMITED | RFG_PRO
+  status       String    @default("ACTIVE") // ACTIVE | CANCELLED | EXPIRED
+  stripeSubId  String?
+  startedAt    DateTime  @default(now())
+  endsAt       DateTime?
+  cancelledAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Transaction {
+  id         String   @id @default(cuid())
+  fromUserId String?
+  fromUser   User?    @relation("FromUser", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("ToUser", fields: [toUserId], references: [id])
+  amount     Decimal  @db.Decimal(10, 2)
+  currency   String   @default("USD")
+  type       String   // TIP | SUBSCRIPTION | AI_CREDIT | PAYOUT | REFUND
+  status     String   @default("PENDING") // PENDING | COMPLETED | FAILED | REFUNDED
+  stripeId   String?
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ============================================================
+// NOTIFICATIONS (doc 38)
+// ============================================================
+
+model Notification {
   id        String   @id @default(cuid())
   userId    String
-  token     String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now()
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // LIKE | COMMENT | FOLLOW | TIP | SYSTEM | CHALLENGE_WON
+  title     String
+  body      String?
+  data      Json?
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
 
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
+// ============================================================
+// RFG — PORTFOLIO (doc 45-47)
+// ============================================================
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  category    String   @default("MODEL") // MODEL | PHOTOGRAPHER | INFLUENCER | FITNESS
+  visibility  String   @default("PUBLIC") // PUBLIC | VERIFIED_ONLY | PRIVATE
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images      PortfolioImage[]
+}
+
+model PortfolioImage {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  caption     String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
 }

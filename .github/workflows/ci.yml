@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [main, master, develop]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   lint-and-typecheck:
     name: Lint & Typecheck
@@ -15,25 +22,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Lint
-        run: pnpm lint
+        run: npm run lint --if-present
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: npm run typecheck --if-present
 
   build-and-test:
     name: Build & Test
@@ -59,35 +61,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Generate Prisma client
-        run: pnpm --filter @meta-geniusz/api exec prisma generate
+        run: npm run -w @meta-geniusz/api db:generate
+
+      - name: Run DB migrations
+        run: npm run -w @meta-geniusz/api db:migrate
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/meta_geniusz_os_test
 
       - name: Build all apps
-        run: pnpm build
+        run: npm run build
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/meta_geniusz_os_test
 
       - name: Run unit tests
-        run: pnpm test --if-present
+        run: npm run test --if-present
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/meta_geniusz_os_test
 
+      - name: Security audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: false
+
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: always()
         continue-on-error: true
 

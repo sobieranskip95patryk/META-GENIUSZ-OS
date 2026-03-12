@@ -1,0 +1,19 @@
+{
+  "name": "@meta-geniusz/payments",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@meta-geniusz/database": "*"
+  },
+  "optionalDependencies": {
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

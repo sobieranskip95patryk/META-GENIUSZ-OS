@@ -1,7 +1,0 @@
-packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'services/media-service'
-  - 'services/notification-service'
-  - 'services/recommendation-engine'
-  - 'services/search-service'

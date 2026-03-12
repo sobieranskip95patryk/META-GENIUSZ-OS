@@ -9,36 +9,69 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 20.x
-        cache: 'pnpm'
-    
-    - name: Install pnpm
-      run: npm install -g pnpm
+        node-version: 20
+        cache: npm
     
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: npm ci
     
+    - name: Security audit
+      run: npm audit --audit-level=high
+
     - name: Run tests
-      run: pnpm run test --if-present
+      run: npm run test --if-present
     
     - name: Build applications
-      run: pnpm run build
+      run: npm run build
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push API image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ./infra/docker/Dockerfile.api
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/meta-geniusz-api:${{ github.sha }}
+
+    - name: Build and push Web image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ./infra/docker/Dockerfile.web
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/meta-geniusz-web:${{ github.sha }}
     
-    - name: Deploy to production
-      run: echo "Deploy step would happen here"
+    - name: Deploy to production webhook
+      if: ${{ secrets.DEPLOY_WEBHOOK_URL != '' }}
+      run: |
+        curl -X POST "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{"sha":"${{ github.sha }}","ref":"${{ github.ref }}"}'
       env:
         DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
     
     - name: Slack Notification
       if: always()
-      uses: slackapi/slack-github-action@v1.24.0
+      uses: slackapi/slack-github-action@v2.1.1
       with:
         payload: |
           {

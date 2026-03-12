@@ -11,14 +11,16 @@
   },
   "dependencies": {
     "express": "^4.21.2",
-    "@prisma/client": "^6.16.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.0",
+    "@meta-geniusz/types": "*",
     "dotenv": "^16.6.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^22.19.15",
-    "typescript": "^5.9.3",
+    "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^20",
     "tsx": "^4.21.0",
-    "vitest": "^1.0.0"
+    "typescript": "^5"
   }
 }

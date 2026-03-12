@@ -8,31 +8,41 @@
     "start": "node dist/index.js",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
-    "test:ui": "vitest --ui",
     "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint 'src/**/*.ts'"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.20.0",
+    "@meta-geniusz/ai-core": "*",
+    "@meta-geniusz/analytics": "*",
+    "@meta-geniusz/auth": "*",
+    "@meta-geniusz/config": "*",
+    "@meta-geniusz/database": "*",
+    "@meta-geniusz/payments": "*",
+    "@meta-geniusz/storage": "*",
+    "@meta-geniusz/types": "*",
+    "@meta-geniusz/utils": "*",
+    "@prisma/client": "^6.16.0",
+    "better-auth": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "multer": "^2.0.1",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^22.19.15",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "@prisma/client": "^6.16.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.6",
+    "@types/multer": "^2.0.0",
     "@types/node": "^22.19.15",
     "prisma": "^6.19.2",
-    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "@vitest/coverage-v8": "^2.0.0",
+    "vitest": "^2.0.0"
   }
 }

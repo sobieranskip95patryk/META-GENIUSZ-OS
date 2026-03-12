@@ -2,22 +2,33 @@
   "name": "meta-geniusz-os",
   "private": true,
   "version": "0.1.0",
-  "packageManager": "pnpm@10.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:e2e": "playwright test",
     "typecheck": "turbo run typecheck",
-    "dev:web": "pnpm --filter @meta-geniusz/web dev",
-    "dev:hhu": "pnpm --filter @meta-geniusz/hhu dev",
-    "dev:rfg": "pnpm --filter @meta-geniusz/rfg dev",
-    "dev:admin": "pnpm --filter @meta-geniusz/admin dev",
-    "dev:ai": "pnpm --filter @meta-geniusz/ai-studio dev"
+    "dev:api": "npm run dev -w @meta-geniusz/api",
+    "dev:web": "npm run dev -w @meta-geniusz/web",
+    "dev:hhu": "npm run dev -w @meta-geniusz/hhu",
+    "dev:rfg": "npm run dev -w @meta-geniusz/rfg",
+    "dev:admin": "npm run dev -w @meta-geniusz/admin",
+    "dev:ai": "npm run dev -w @meta-geniusz/ai-studio",
+    "dev:services": "turbo run dev --filter=./services/*",
+    "db:migrate": "npm run -w @meta-geniusz/api exec prisma migrate deploy",
+    "db:studio": "npm run -w @meta-geniusz/api exec prisma studio"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@types/cors": "^2.8.19",
-    "turbo": "^2.5.0"
+    "turbo": "^2.5.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@prisma/client": "^7.5.0",
