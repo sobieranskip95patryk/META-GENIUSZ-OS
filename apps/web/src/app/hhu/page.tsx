@@ -1,15 +1,17 @@
+import ModuleWorkspace from "../../components/module-workspace";
+
 export default function HHUPage() {
   return (
-    <main className="min-h-screen bg-black px-6 py-16 text-white">
-      <div className="mx-auto max-w-5xl">
-        <a href="/" className="text-sm text-cyan-300">
-          ← Back to META-GENIUSZ OS
-        </a>
-        <h1 className="mt-6 text-5xl font-black">Hip Hop Universe</h1>
-        <p className="mt-4 max-w-2xl text-white/70">
-          Moduł dla artystów, fanów, marek, contentu, collabów i społeczności.
-        </p>
-      </div>
-    </main>
+    <ModuleWorkspace
+      moduleKey="hhu"
+      title="Hip Hop Universe"
+      subtitle="Moduł dla artystów, fanów, marek, contentu, collabów i społeczności."
+      accentClass="bg-cyan-300"
+      quickActions={[
+        { label: "Nowy post", value: "new-post" },
+        { label: "Live room", value: "live-room" },
+        { label: "Analiza trendów", value: "trends" },
+      ]}
+    />
   );
 }

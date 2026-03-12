@@ -1,15 +1,17 @@
+import ModuleWorkspace from "../../components/module-workspace";
+
 export default function AIStudioPage() {
   return (
-    <main className="min-h-screen bg-black px-6 py-16 text-white">
-      <div className="mx-auto max-w-5xl">
-        <a href="/" className="text-sm text-cyan-300">
-          ← Back to META-GENIUSZ OS
-        </a>
-        <h1 className="mt-6 text-5xl font-black">AI Studio</h1>
-        <p className="mt-4 max-w-2xl text-white/70">
-          Generator bio, captionów, kampanii, koncepcji i narzędzi wzrostu dla creatorów.
-        </p>
-      </div>
-    </main>
+    <ModuleWorkspace
+      moduleKey="ai-studio"
+      title="AI Studio"
+      subtitle="Generator bio, captionów, kampanii, koncepcji i narzędzi wzrostu dla creatorów."
+      accentClass="bg-violet-300"
+      quickActions={[
+        { label: "Nowy prompt", value: "new-prompt" },
+        { label: "Generuj bio", value: "generate-bio" },
+        { label: "Eksport wyników", value: "export-results" },
+      ]}
+    />
   );
 }

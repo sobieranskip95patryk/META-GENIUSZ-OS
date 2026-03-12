@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 export const metadata = {
   title: "META-GENIUSZ OS",
@@ -21,21 +22,21 @@ export default function RootLayout({
             </div>
 
             <nav className="flex gap-6 text-sm text-white/70">
-              <a href="/hhu" className="hover:text-white">
+              <Link href="/hhu" className="hover:text-white">
                 Hip Hop Universe
-              </a>
+              </Link>
 
-              <a href="/rfg" className="hover:text-white">
+              <Link href="/rfg" className="hover:text-white">
                 Rocket Fuell Girls
-              </a>
+              </Link>
 
-              <a href="/ai-studio" className="hover:text-white">
+              <Link href="/ai-studio" className="hover:text-white">
                 AI Studio
-              </a>
+              </Link>
 
-              <a href="/admin" className="hover:text-white">
+              <Link href="/admin" className="hover:text-white">
                 Admin
-              </a>
+              </Link>
             </nav>
           </div>
         </header>
