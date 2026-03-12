@@ -1,5 +1,5 @@
 {
-  "name": "@meta-geniusz/auth",
+  "name": "@meta-geniusz/agents",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
@@ -8,14 +8,10 @@
     "build": "tsc"
   },
   "dependencies": {
-    "better-auth": "^1.0.0",
-    "@prisma/client": "^6.19.2",
-    "@meta-geniusz/database": "*"
+    "@meta-geniusz/ai-core": "*",
+    "@meta-geniusz/types": "*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
-  },
-  "peerDependencies": {
-    "@types/node": ">=20"
   }
 }

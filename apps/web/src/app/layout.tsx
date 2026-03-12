@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
-import Link from "next/link";
+import Navigation from "../components/navigation";
+import { ToastProvider } from "../components/toast";
 
 export const metadata = {
   title: "META-GENIUSZ OS",
@@ -14,40 +15,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <body className="bg-black text-white">
-        <header className="border-b border-white/10">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-            <div className="font-bold tracking-widest text-sm">
-              META-GENIUSZ OS
+      <body className="bg-[#050505] text-white antialiased">
+        <ToastProvider>
+          <Navigation />
+
+          <div className="animate-fade-in">{children}</div>
+
+          <footer className="border-t border-white/10 mt-20">
+            <div className="mx-auto max-w-7xl px-6 py-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-2 text-sm text-white/50">
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-gradient-to-br from-pink-500 to-cyan-400 text-[8px] font-black text-white">
+                  MG
+                </span>
+                META-GENIUSZ OS • Creator Economy Platform
+              </div>
+              <div className="flex gap-6 text-xs text-white/40">
+                <span>© 2026 META-GENIUSZ</span>
+                <span>v0.1.0 MVP</span>
+              </div>
             </div>
-
-            <nav className="flex gap-6 text-sm text-white/70">
-              <Link href="/hhu" className="hover:text-white">
-                Hip Hop Universe
-              </Link>
-
-              <Link href="/rfg" className="hover:text-white">
-                Rocket Fuell Girls
-              </Link>
-
-              <Link href="/ai-studio" className="hover:text-white">
-                AI Studio
-              </Link>
-
-              <Link href="/admin" className="hover:text-white">
-                Admin
-              </Link>
-            </nav>
-          </div>
-        </header>
-
-        {children}
-
-        <footer className="border-t border-white/10 mt-20">
-          <div className="mx-auto max-w-7xl px-6 py-6 text-sm text-white/50">
-            META-GENIUSZ OS • Creator Economy Platform
-          </div>
-        </footer>
+          </footer>
+        </ToastProvider>
       </body>
     </html>
   );
