@@ -6,11 +6,18 @@ import { prisma } from '@meta-geniusz/database';
 // BETTER AUTH CONFIGURATION
 // ============================================================
 
+const betterAuthSecret = process.env.BETTER_AUTH_SECRET;
+if (!betterAuthSecret) {
+  throw new Error(
+    '[auth] BETTER_AUTH_SECRET is required. Copy apps/api/.env.example to apps/api/.env and fill in the secrets.',
+  );
+}
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
-  secret: process.env.BETTER_AUTH_SECRET ?? 'dev-secret-change-in-production',
+  secret: betterAuthSecret,
   baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3001',
   trustedOrigins: (process.env.ALLOWED_ORIGINS ?? 'http://localhost:3000').split(','),
 
