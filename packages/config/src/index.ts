@@ -9,7 +9,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url('Invalid DATABASE_URL'),
 
   // Auth (Better Auth)
-  BETTER_AUTH_SECRET: z.string().min(32).default('dev-secret-change-in-production'),
+  BETTER_AUTH_SECRET: z.string().min(32),
   BETTER_AUTH_URL: z.string().url().default('http://localhost:3001'),
 
   // OAuth
@@ -46,7 +46,7 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().default(100),
 
   // JWT (legacy)
-  JWT_SECRET: z.string().min(32).default('dev-jwt-secret-change-in-production'),
+  JWT_SECRET: z.string().min(32).optional(),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
@@ -91,8 +91,18 @@ export const apiConfig = {
   },
 };
 
+function requireSecret(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `[config] ${name} is required but not set. Copy apps/api/.env.example to apps/api/.env and fill in the secrets.`,
+    );
+  }
+  return value;
+}
+
 export const authConfig = {
-  secret: process.env.BETTER_AUTH_SECRET ?? 'dev-secret',
+  secret: requireSecret('BETTER_AUTH_SECRET'),
   baseUrl: process.env.BETTER_AUTH_URL ?? 'http://localhost:3001',
   trustedOrigins: (process.env.ALLOWED_ORIGINS ?? 'http://localhost:3000').split(','),
   emailVerificationEnabled: process.env.NODE_ENV === 'production',
